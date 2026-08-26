@@ -17,17 +17,33 @@ class ACPlayerCharacter : public ACCharacter
 public:
 	ACPlayerCharacter();
 	
+	//----------------------------------------------------------------------------//
+	//									Functions								  //
+	//----------------------------------------------------------------------------//
 	virtual void PawnClientRestart() override; //called everytime the client reconnects or connects, aka if you join the game it starts your stuff then
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-private:
-	
+
 	//Camera setup
 	UPROPERTY(VisibleDefaultsOnly, Category = "Camera") class USpringArmComponent* CameraBoom;
+	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Camera") class UCameraComponent* ViewCam;
 	
-	//Inputs
+	//----------------------------------------------------------------------------//
+	//									input									  //
+	//----------------------------------------------------------------------------//
+private:
+	void HandlelookInput(const struct FInputActionValue& InputActionValue); //no need to copy just need the reference and read the variable **if no '&' its a copy not a reference**
+	void HandleMoveInput(const struct FInputActionValue& InputActionValue);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputMappingContext* PlayerInputMappingContext;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* JumpingAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* LookAction;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* MoveAction;
+	
 	
 };

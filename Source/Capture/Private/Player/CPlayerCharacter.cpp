@@ -17,15 +17,17 @@ ACPlayerCharacter::ACPlayerCharacter()
 	//Player camera
 	ViewCam = CreateDefaultSubobject<UCameraComponent>("View Cam");
 	ViewCam->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	
+	CameraBoom->bUsePawnControlRotation = true; //allows pitch to work
+	
+	bUseControllerRotationYaw = false;
 }
 
 void ACPlayerCharacter::PawnClientRestart()
 {
 	Super::PawnClientRestart();
-	
-	UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetController<APlayerController>()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	
-	if (EnhancedInputLocalPlayerSubsystem)
+
+	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = GetController<APlayerController>()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 	{
 		EnhancedInputLocalPlayerSubsystem->ClearAllMappings();
 		EnhancedInputLocalPlayerSubsystem->AddMappingContext(PlayerInputMappingContext, 0);
@@ -39,5 +41,21 @@ void ACPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(JumpingAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::Jump);
+		
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::HandlelookInput);
+		
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::HandleMoveInput);
 	}
+}
+
+void ACPlayerCharacter::HandlelookInput(const struct FInputActionValue& InputActionValue) 
+{
+	FVector2D InputAction = InputActionValue.Get<FVector2D>();
+	AddControllerYawInput(InputAction.X);
+	AddControllerPitchInput(InputAction.Y);
+}
+
+void ACPlayerCharacter::HandleMoveInput(const struct FInputActionValue& InputActionValue)
+{
+	
 }

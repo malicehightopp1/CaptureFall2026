@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
@@ -20,7 +21,10 @@ ACPlayerCharacter::ACPlayerCharacter()
 	
 	CameraBoom->bUsePawnControlRotation = true; //allows pitch to work
 	
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = false; //so the camera rotates around the player not follows
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true; //rotates body to where your moving towards
+	GetCharacterMovement()->RotationRate = FRotator(360.0f);
 }
 
 void ACPlayerCharacter::PawnClientRestart()
@@ -57,5 +61,23 @@ void ACPlayerCharacter::HandlelookInput(const struct FInputActionValue& InputAct
 
 void ACPlayerCharacter::HandleMoveInput(const struct FInputActionValue& InputActionValue)
 {
+	FVector2D InputAction = InputActionValue.Get<FVector2D>();
 	
+	InputAction.Normalize();
+	AddMovementInput(GetMoveFWDDirection() * InputAction.Y + GetRightDirection() * InputAction.X);
+}
+
+FVector ACPlayerCharacter::GetRightDirection() const
+{
+	return ViewCam->GetRightVector();
+}
+
+FVector ACPlayerCharacter::GetLookFWDVector() const
+{
+	return ViewCam->GetForwardVector();
+}
+
+FVector ACPlayerCharacter::GetMoveFWDDirection() const
+{
+	return FVector::CrossProduct(GetRightDirection(), FVector::UpVector);
 }

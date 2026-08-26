@@ -34,9 +34,15 @@ public:
 	//									input									  //
 	//----------------------------------------------------------------------------//
 private:
+	//Functions
 	void HandlelookInput(const struct FInputActionValue& InputActionValue); //no need to copy just need the reference and read the variable **if no '&' its a copy not a reference**
 	void HandleMoveInput(const struct FInputActionValue& InputActionValue);
 
+	//move
+	FVector GetRightDirection() const;
+	FVector GetLookFWDVector() const;
+	FVector GetMoveFWDDirection	() const;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputMappingContext* PlayerInputMappingContext;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* JumpingAction;

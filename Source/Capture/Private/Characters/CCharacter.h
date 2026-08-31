@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
 #include "CCharacter.generated.h"
 
 UCLASS()
-class ACCharacter : public ACharacter
+class ACCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -18,12 +19,24 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+ 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	
+	
+	//-------------------------------------------------------------//
+	//				Gameplay abilites 
+	//-------------------------------------------------------------//
+public:
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+private:
+	UPROPERTY() class UCAbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY() class UCAttributeSet* AttributeSet;
+	
+	
 };

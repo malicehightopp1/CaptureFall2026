@@ -2,6 +2,8 @@
 
 
 #include "Characters/CCharacter.h"
+#include "Abilitysystem/CAbilitySystemComponent.h"
+#include "Abilitysystem/CAttributeSet.h"
 
 // Sets default values
 ACCharacter::ACCharacter()
@@ -9,6 +11,11 @@ ACCharacter::ACCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Created like any components are 
+	AbilitySystemComponent = CreateDefaultSubobject<UCAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AttributeSet = CreateDefaultSubobject<UCAttributeSet>(TEXT("AttributeSet"));	
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +37,10 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 

@@ -21,7 +21,9 @@ class UCAnimInstance : public UAnimInstance
 	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe)) FORCEINLINE bool IsNotMoving() const {return Speed == 0;}
 	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe)) FORCEINLINE bool IsOnGround() const {return !bIsFalling;}
 	
-	
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe)) FORCEINLINE float GetLookYawOffset() const {return LookRotationOffset.Yaw; }
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe)) FORCEINLINE float GetLookPitchOffset() const {return LookRotationOffset.Pitch; }
+
 private:
 	UPROPERTY() class ACharacter* OwningCharacter;
 	UPROPERTY() class UCharacterMovementComponent* OwningCharacterMovementComponent;
@@ -35,5 +37,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation") float YawSpeedSmoothLerpRate = 2.f;
 	
 	FRotator BodyPrevRotation; //grabbing the players previous yaw 
+	
+	//Aim offset 
+	UPROPERTY() FRotator LookRotationOffset;
 	
 };

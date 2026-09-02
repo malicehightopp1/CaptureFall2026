@@ -14,4 +14,12 @@ class ACPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	//on possess is only called on the server
+	virtual void OnPossess(APawn* NewPawn) override;
+	
+	//called when client received their pawn on the client machine. not called on dedicated server 
+	virtual void AcknowledgePossession(APawn* NewPawn) override;
+private:
+	UPROPERTY() class ACPlayerCharacter* CPlayerCharacter;
 };

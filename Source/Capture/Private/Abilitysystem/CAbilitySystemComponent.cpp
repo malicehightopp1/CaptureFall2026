@@ -5,7 +5,7 @@
 
 void UCAbilitySystemComponent::ApplyInitialEffects()
 {
-	if (GetOwner() || !GetOwner()->HasAuthority()){ return; } //need this guard against hackers
+	if (!GetOwner() || !GetOwner()->HasAuthority()){ return; } //need this guard against hackers
 	
 	for (const TSubclassOf<UGameplayEffect>& InitialEffectClass : InitialEffects)
 	{

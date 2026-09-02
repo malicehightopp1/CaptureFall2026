@@ -18,5 +18,4 @@ private:
 	UPROPERTY() FGameplayAttributeData Health; 
 	UPROPERTY() FGameplayAttributeData MaxHealth;
 	
-	
 };

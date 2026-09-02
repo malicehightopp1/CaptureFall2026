@@ -15,7 +15,8 @@ class ACCharacter : public ACharacter, public IAbilitySystemInterface
 public:
 	// Sets default values for this character's properties
 	ACCharacter();
-
+	void ServerSideInit();
+	void ClientSideInit();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,16 +28,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	
-	
 	//-------------------------------------------------------------//
 	//				Gameplay abilites 
 	//-------------------------------------------------------------//
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 private:
-	UPROPERTY() class UCAbilitySystemComponent* AbilitySystemComponent;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Ability System") class UCAbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY() class UCAttributeSet* AttributeSet;
-	
 	
 };

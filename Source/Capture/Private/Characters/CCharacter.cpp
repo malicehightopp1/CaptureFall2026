@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "Characters/CCharacter.h"
 #include "Abilitysystem/CAbilitySystemComponent.h"
@@ -8,7 +6,6 @@
 // Sets default values
 ACCharacter::ACCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Created like any components are 
@@ -18,21 +15,29 @@ ACCharacter::ACCharacter()
 	
 }
 
-// Called when the game starts or when spawned
+void ACCharacter::ServerSideInit()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this); //sets owner and editor of ability system
+	AbilitySystemComponent->ApplyInitialEffects();
+}
+//init called on server and client side
+void ACCharacter::ClientSideInit()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this); //sets owner and editor of ability system
+}
+
 void ACCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ACCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Called to bind functionality to input
 void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

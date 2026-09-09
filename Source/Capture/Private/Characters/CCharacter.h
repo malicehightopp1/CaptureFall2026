@@ -37,4 +37,11 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Ability System") class UCAbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY() class UCAttributeSet* AttributeSet;
 	
+	//----------------------------------------------------------------------------//
+	//									UI										  //
+	//----------------------------------------------------------------------------//
+	
+private:
+	UPROPERTY(VisibleDefaultsOnly, Category = "UI") class UWidgetComponent* OverheadWidgetComponent;
+	void ConfigureOverheadWidgetComponent();
 };

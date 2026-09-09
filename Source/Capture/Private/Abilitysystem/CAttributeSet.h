@@ -15,7 +15,10 @@ class UCAttributeSet : public UAttributeSet
 public:
 	//for fine-tuning the behavior of replicating of sending the information to the client
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
+	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, Health)
+	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, MaxHealth)
+	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, Mana)
+	ATTRIBUTE_ACCESSORS_BASIC(UCAttributeSet, MaxMana)
 private:
 	UPROPERTY(ReplicatedUsing = OnRep_Health) FGameplayAttributeData Health; 
 	

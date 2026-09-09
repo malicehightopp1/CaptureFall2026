@@ -23,7 +23,6 @@ public:
 	virtual void PawnClientRestart() override; //called everytime the client reconnects or connects, aka if you join the game it starts your stuff then
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
 
 	//Camera setup
 	UPROPERTY(VisibleDefaultsOnly, Category = "Camera") class USpringArmComponent* CameraBoom;
@@ -50,6 +49,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* LookAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input") class UInputAction* MoveAction;
-	
-	
 };

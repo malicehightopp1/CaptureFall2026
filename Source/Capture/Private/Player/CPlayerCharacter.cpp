@@ -2,7 +2,7 @@
 
 
 #include "Player/CPlayerCharacter.h"
-
+#include "Components/WidgetComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -81,3 +81,4 @@ FVector ACPlayerCharacter::GetMoveFWDDirection() const
 {
 	return FVector::CrossProduct(GetRightDirection(), FVector::UpVector);
 }
+

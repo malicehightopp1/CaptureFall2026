@@ -2,6 +2,8 @@
 #include "Characters/CCharacter.h"
 #include "Abilitysystem/CAbilitySystemComponent.h"
 #include "Abilitysystem/CAttributeSet.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/OverHeadStatusGauge.h"
 
 // Sets default values
 ACCharacter::ACCharacter()
@@ -12,7 +14,8 @@ ACCharacter::ACCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UCAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AttributeSet = CreateDefaultSubobject<UCAttributeSet>(TEXT("AttributeSet"));	
 	
-	
+	OverheadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("Overhead Widget");
+	OverheadWidgetComponent->SetupAttachment(GetRootComponent());
 }
 
 void ACCharacter::ServerSideInit()
@@ -30,6 +33,7 @@ void ACCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ConfigureOverheadWidgetComponent();
 }
 
 void ACCharacter::Tick(float DeltaTime)
@@ -47,5 +51,17 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ACCharacter::ConfigureOverheadWidgetComponent()
+{
+	if (!OverheadWidgetComponent){return;}
+	
+	UOverHeadStatusGauge* OverHeadStatusGauge = Cast<UOverHeadStatusGauge>(OverheadWidgetComponent->GetUserWidgetObject());
+	
+	if (OverHeadStatusGauge)
+	{
+		OverHeadStatusGauge->ConfigureWithAbilitySystemComponent(GetAbilitySystemComponent());
+	}
 }
 

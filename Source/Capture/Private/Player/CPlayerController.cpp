@@ -43,4 +43,8 @@ void ACPlayerController::SpawnGameplayWidget()
 			UE_LOG(LogTemp,Warning,TEXT("No Gameplay widget"));
 		}
 	}
+	else
+	{
+		UE_LOG(LogTemp,Warning,TEXT("No LocalPlayerController"));
+	}
 }

@@ -22,11 +22,22 @@ void ACCharacter::ServerSideInit()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this); //sets owner and editor of ability system
 	AbilitySystemComponent->ApplyInitialEffects();
+	AbilitySystemComponent->GiveInitialAbilities();
 }
 //init called on server and client side
 void ACCharacter::ClientSideInit()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this); //sets owner and editor of ability system
+}
+
+void ACCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	if (NewController && !NewController->IsPlayerController())
+	{
+		ServerSideInit();
+	}
 }
 
 void ACCharacter::BeginPlay()
@@ -48,6 +59,11 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+bool ACCharacter::IsLocallyControlledByPlayer() const
+{
+	return IsLocallyControlled() && GetController()->IsPlayerController();
+}
+
 UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -56,6 +72,12 @@ UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 void ACCharacter::ConfigureOverheadWidgetComponent()
 {
 	if (!OverheadWidgetComponent){return;}
+	
+	if (IsLocallyControlledByPlayer())
+	{
+		OverheadWidgetComponent->SetHiddenInGame(true);
+		return;
+	}
 	
 	UOverHeadStatusGauge* OverHeadStatusGauge = Cast<UOverHeadStatusGauge>(OverheadWidgetComponent->GetUserWidgetObject());
 	

@@ -13,3 +13,13 @@ void UCAbilitySystemComponent::ApplyInitialEffects()
 		ApplyGameplayEffectSpecToSelf(*EffectSpec.Data); //"de-Pointer" to get pointer 
 	}
 }
+
+void UCAbilitySystemComponent::GiveInitialAbilities()
+{
+	if (!GetOwner() || !GetOwner()->HasAuthority()){ return; }
+	
+	for (const TSubclassOf<UGameplayAbility>& InitialAbilityClass : InitialAbilities)
+	{
+		GiveAbility(FGameplayAbilitySpec(InitialAbilityClass, 1, -1));
+	}
+}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Widgets/GameplayWidget.h"
 #include "CPlayerController.generated.h"
 
 /**
@@ -22,4 +23,10 @@ public:
 	virtual void AcknowledgePossession(APawn* NewPawn) override;
 private:
 	UPROPERTY() class ACPlayerCharacter* CPlayerCharacter;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Widget") TSubclassOf<class UGameplayWidget> GameplayWidgetClass;
+	
+	UPROPERTY() UGameplayWidget* GameplayWidget;
+	
+	void SpawnGameplayWidget();
 };

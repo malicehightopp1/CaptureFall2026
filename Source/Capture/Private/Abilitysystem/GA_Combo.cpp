@@ -12,6 +12,11 @@ UGA_Combo::UGA_Combo()
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
 }
 
+void UGA_Combo::DoDamage(FGameplayEventData Payload)
+{
+	
+}
+
 void UGA_Combo::HandleComboChange(FGameplayEventData EventData)
 {
 	FGameplayTag EventTag = EventData.EventTag;
@@ -60,6 +65,13 @@ void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		WaitComboEvent->ReadyForActivation();
 	}
 	SetupWaitInputPress();
+	
+	if (K2_HasAuthority())
+	{
+		UAbilityTask_WaitGameplayEvent* WaitDamageEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TAG_ABILITY_COMBO_DAMAGE, nullptr, false, false);
+		WaitDamageEvent->EventReceived.AddDynamic(this, &UGA_Combo::DoDamage);
+		WaitDamageEvent->ReadyForActivation();
+	}
 }
 
 #pragma region Input Handling for combo

@@ -1,12 +1,34 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Abilitysystem/CAbilitySystemNativeTags.h"
 #include "Abilitysystem/GA_Combo.h"
+#include "Abilitysystem/CAbilitySystemNativeTags.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "GameplayTagsManager.h"
 
 UGA_Combo::UGA_Combo()
 {
 	AbilityTags.AddTag(TAG_ABILITY_BASICATTACK);
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
+}
+
+void UGA_Combo::HandleComboChange(FGameplayEventData EventData)
+{
+	FGameplayTag EventTag = EventData.EventTag;
+	
+	if (EventTag == TAG_ABILITY_COMBO_CHANGE_END)
+	{
+		NextComboName = NAME_None;
+		UE_LOG(LogTemp, Warning, TEXT("Next combo is none"));
+
+		return;
+	}
+	
+	TArray<FName> TagNames;
+	UGameplayTagsManager::Get().SplitGameplayTagFName(EventTag, TagNames);
+	NextComboName = TagNames.Last();
+	
+	UE_LOG(LogTemp, Warning, TEXT("NextComboName: %s"), *(NextComboName.ToString()));
 }
 
 void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -31,5 +53,34 @@ void UGA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		PlayMontageAndWaitTask->OnBlendOut.AddDynamic(this, &UGA_Combo::K2_EndAbility);
 		
 		PlayMontageAndWaitTask->ReadyForActivation(); //actually plays the task/animation
+		
+		UAbilityTask_WaitGameplayEvent* WaitComboEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TAG_ABILITY_COMBO_CHANGE, nullptr, false, false);
+		
+		WaitComboEvent->EventReceived.AddDynamic(this, &UGA_Combo::HandleComboChange);
+		WaitComboEvent->ReadyForActivation();
+	}
+	SetupWaitInputPress();
+}
+
+#pragma region Input Handling for combo
+void UGA_Combo::HandleComboInputPress(float TimeWaited)
+{
+	SetupWaitInputPress();
+	if (NextComboName == NAME_None)
+	{
+		return;
+	}
+	
+	if (UAnimInstance* AnimInstance = GetCurrentActorInfo()->GetAnimInstance())
+	{
+		AnimInstance->Montage_SetNextSection(AnimInstance->Montage_GetCurrentSection(ComboMontage), NextComboName, ComboMontage);
 	}
 }
+
+void UGA_Combo::SetupWaitInputPress()
+{
+	UAbilityTask_WaitInputPress* WaitInputPress = UAbilityTask_WaitInputPress::WaitInputPress(this);
+	WaitInputPress->OnPress.AddDynamic(this, &UGA_Combo::HandleComboInputPress);
+	WaitInputPress->ReadyForActivation();
+}
+#pragma endregion

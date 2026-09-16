@@ -7,7 +7,6 @@
 #include "AbilitySystemComponent.h"
 #include "CAttributeSet.generated.h"
 
-
 UCLASS()
 class UCAttributeSet : public UAttributeSet
 {

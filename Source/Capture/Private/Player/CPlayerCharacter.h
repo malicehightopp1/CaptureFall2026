@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilitysystem/CAbilityInputID.h"
 #include "Characters/CCharacter.h"
 #include "CPlayerCharacter.generated.h"
 
@@ -22,6 +23,7 @@ public:
 	//----------------------------------------------------------------------------//
 	virtual void PawnClientRestart() override; //called everytime the client reconnects or connects, aka if you join the game it starts your stuff then
 	
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Camera setup
@@ -33,6 +35,11 @@ public:
 	//									input									  //
 	//----------------------------------------------------------------------------//
 private:
+	
+	void HandleAbilityInputAction(const struct FInputActionValue& InputActionValue, ECAbilityInputID InputID);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input") TMap<ECAbilityInputID, class UInputAction*> GamePlayAbilityInputActions;
+	
 	//Functions
 	void HandlelookInput(const struct FInputActionValue& InputActionValue); //no need to copy just need the reference and read the variable **if no '&' its a copy not a reference**
 	void HandleMoveInput(const struct FInputActionValue& InputActionValue);

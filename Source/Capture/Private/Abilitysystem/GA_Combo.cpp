@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Abilitysystem/GA_Combo.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Abilitysystem/CAbilitySystemNativeTags.h"
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -19,6 +21,16 @@ void UGA_Combo::DoDamage(FGameplayEventData Payload)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Damaging combo"));
 	TArray<FHitResult> HitResults = GetHitResultsFromSweepLocationTargetData(Payload.TargetData, 30.0f, true);
+	
+	for (const FHitResult& HitResult : HitResults)
+	{
+		TSubclassOf<UGameplayEffect> DamageEffects = GetDamageEffectForcurrentCombo();
+		
+		FGameplayEffectSpecHandle effectSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffects, GetAbilityLevel(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo()));
+		
+		ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), effectSpecHandle, UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(HitResult.GetActor()));
+	}
+	
 }
 
 void UGA_Combo::HandleComboChange(FGameplayEventData EventData)
@@ -98,5 +110,19 @@ void UGA_Combo::SetupWaitInputPress()
 	UAbilityTask_WaitInputPress* WaitInputPress = UAbilityTask_WaitInputPress::WaitInputPress(this);
 	WaitInputPress->OnPress.AddDynamic(this, &UGA_Combo::HandleComboInputPress);
 	WaitInputPress->ReadyForActivation();
+}
+
+TSubclassOf<class UGameplayEffect> UGA_Combo::GetDamageEffectForcurrentCombo() const
+{
+	if (UAnimInstance* Owneraniminstance = GetCurrentActorInfo()->GetAnimInstance())
+	{
+		FName CurrentCombo = Owneraniminstance->Montage_GetCurrentSection(ComboMontage);
+		const TSubclassOf<UGameplayEffect>* FoundEffect = DamageEffect.Find(CurrentCombo);
+		if (FoundEffect)
+		{
+			return *FoundEffect;
+		}
+	}
+	return DefaultDamageEffect;
 }
 #pragma endregion

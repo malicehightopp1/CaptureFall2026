@@ -18,8 +18,8 @@ void UCAbilitySystemComponent::GiveInitialAbilities()
 {
 	if (!GetOwner() || !GetOwner()->HasAuthority()){ return; }
 	
-	for (const TSubclassOf<UGameplayAbility>& InitialAbilityClass : InitialAbilities)
+	for (const TPair<ECAbilityInputID, TSubclassOf<UGameplayAbility>>& InitialAbilityPair : InitialAbilities)
 	{
-		GiveAbility(FGameplayAbilitySpec(InitialAbilityClass, 1, 0));
+		GiveAbility(FGameplayAbilitySpec(InitialAbilityPair.Value, 1, (int32)InitialAbilityPair.Key));
 	}
 }

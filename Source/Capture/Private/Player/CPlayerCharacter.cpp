@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Capture/Capture.h"
 
 ACPlayerCharacter::ACPlayerCharacter()
 {
@@ -19,6 +20,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	ViewCam->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	
 	CameraBoom->bUsePawnControlRotation = true; //allows pitch to work
+	CameraBoom->ProbeChannel = ECC_CameraBoom;
 	
 	bUseControllerRotationYaw = false; //so the camera rotates around the player not follows
 	

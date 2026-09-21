@@ -18,6 +18,11 @@ public:
 	UFUNCTION() void DoDamage(FGameplayEventData Payload);
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Damage") TMap<FName, TSubclassOf<class UGameplayEffect>> DamageEffect;
+		
+	UPROPERTY(EditDefaultsOnly, Category = "Damage") TSubclassOf<UGameplayEffect> DefaultDamageEffect;
+	
+	TSubclassOf<class UGameplayEffect> GetDamageEffectForcurrentCombo() const;
 private:
 	UFUNCTION()void HandleComboChange(FGameplayEventData EventData);
 	
@@ -26,4 +31,5 @@ private:
 	
 	UFUNCTION() void HandleComboInputPress(float TimeWaited);
 	void SetupWaitInputPress();
+	
 };

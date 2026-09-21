@@ -5,16 +5,20 @@
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameplayTagsManager.h"
+#include "InterchangeResult.h"
+#include "SNegativeActionButton.h"
+#include "SWarningOrErrorBox.h"
 
 UGA_Combo::UGA_Combo()
 {
-	AbilityTags.AddTag(TAG_ABILITY_BASICATTACK);
+	SetAssetTags(FGameplayTagContainer(TAG_ABILITY_BASICATTACK));
 	BlockAbilitiesWithTag.AddTag(TAG_ABILITY_BASICATTACK);
 }
 
 void UGA_Combo::DoDamage(FGameplayEventData Payload)
 {
-	
+	UE_LOG(LogTemp, Warning, TEXT("Damaging combo"));
+	TArray<FHitResult> HitResults = GetHitResultsFromSweepLocationTargetData(Payload.TargetData, 30.0f, true);
 }
 
 void UGA_Combo::HandleComboChange(FGameplayEventData EventData)

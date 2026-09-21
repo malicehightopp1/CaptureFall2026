@@ -7,9 +7,6 @@
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "AN_SendTargetGroup.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UAN_SendTargetGroup : public UAnimNotify
 {
